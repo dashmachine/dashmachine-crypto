@@ -1,6 +1,6 @@
-# Dashmachine cryto utility library
+# Dashmachine crypto utility library
 
-Cryptographic helper functions for use is Dash Platform Wed Dapp Sample Messaging.
+Cryptographic helper functions for use is Dash Platform Web Dapp Sample Messaging.
 
 ## Browser usage
 

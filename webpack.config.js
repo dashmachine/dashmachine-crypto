@@ -1,10 +1,10 @@
 const config = {
-    entry: ['./src/crypto.service.js'],
+    entry: ['./src/dashmachine-crypto.js'],
     output: {
       path: __dirname + '/build',
       filename: 'dashmachine-crypto-lib.js',
       libraryTarget: 'var',
-     library: 'CryptoService'
+     library: 'DashmachineCrypto'
     },
     module: {
         rules: [

@@ -1,10 +1,16 @@
 # Dashmachine crypto utility library
 
-Cryptographic helper functions for use is Dash Platform Web Dapp Sample Messaging.
+Cryptographic helper functions for use in Dash Platform Web Dapp Sample Messaging.
+
+> Note: this is an experimental library to support the web dapp sample investigation of Dash Platform usage - not for production use.
 
 ## Browser usage
 
 Include the `dashmachine-crypto-lib.js` script file available from the [releases page](https://github.com/dashmachine/dashmachine-crypto/releases).
+
+## Nodejs usage
+
+    npm i dashmachine-crypto
 
 ### Documentation
 
@@ -12,7 +18,7 @@ Include the `dashmachine-crypto-lib.js` script file available from the [releases
 
 ##### Table of Contents
 
--   [CryptoService](#cryptoservice)
+-   [DashmachineCrypto](#dashmachinecrypto)
     -   [Examples](#examples)
 -   [encrypt](#encrypt)
     -   [Parameters](#parameters)
@@ -23,13 +29,14 @@ Include the `dashmachine-crypto-lib.js` script file available from the [releases
 -   [verify](#verify)
     -   [Parameters](#parameters-3)
 
-#### CryptoService
+#### DashmachineCrypto
 
-CryptoService performs ECIES encryption & decryption and Double SHA256 Hashing. Note the class contains only static methods so you do not have to call the contructor, i.e. use CryptoService.encrypt, not new CryptoService()
+DashmachineCrypto performs ECIES encryption & decryption and Double SHA256 Hashing. Note the class contains only static methods so you do not have to call the contructor, i.e. use DashmachineCrypto.encrypt, not new DashmachineCrypto()
 
 ##### Examples
 
 ```javascript
+<!-- Usage in HTML file -->
 <script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
 <script>
 const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
@@ -38,18 +45,36 @@ const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
 const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
 const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
 console.log(`Encrypting message "${message}"...`);
-const encrypted = CryptoService.encrypt(vendorPrivateKey, message, userPubicKey);
+const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
 console.dir(encrypted.data);
 console.log(`Decrypting result message "${message}"...`);
-const decrypted = CryptoService.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
+const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
 console.dir(decrypted);
 console.log(`Hashing message "${message}"...`);
-const digest = CryptoService.hash(message);
+const digest = DashmachineCrypto.hash(message);
 console.dir(digest.data);
 console.log(`Verifying hash...`);
-const verifies = CryptoService.verify(message, digest.data);
+const verifies = DashmachineCrypto.verify(message, digest.data);
 console.dir(verifies.success)
 </script>
+```
+
+```javascript
+//use in nodejs
+const DashmachineCrypto = require("dashmachine-crypto")
+
+const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
+const message = 'hello';
+const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
+const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
+const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
+console.log(`Encrypting message "${message}"...`);
+const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
+console.dir(encrypted.data);
+console.log(`Decrypting result message "${message}"...`);
+const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
+console.dir(decrypted);
+console.log('decrypted', decrypted.data);
 ```
 
 #### encrypt
@@ -96,25 +121,24 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 To develop this library:
 
 -   clone the repository and change to project directory 
-```
-git clone  https://github.com/dashmachine/dashmachine-crypto.git && cd dashmachine-crypto
-```
+
+
+    git clone  https://github.com/dashmachine/dashmachine-crypto.git && cd dashmachine-crypto
 
 The source file is `src/crypto.service.js`
 
 -   build output
-```
-npm run build
-```
+
+
+    npm run build
 
 -   test with webpack dev server
-```
-npm start
-```
+
+
+    npm start
 
 -   update documentation (requires npm documentation package installed globally:  `npm i -g documentation`)
 
 Update the Documentation section of the README.md file  
-```
-npm run docs:readme
-```
+
+    npm run docs:readme

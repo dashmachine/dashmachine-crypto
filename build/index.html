@@ -12,16 +12,16 @@
     const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
     const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
     console.log(`Encrypting message "${message}"...`);
-    const encrypted = CryptoService.encrypt(vendorPrivateKey, message, userPubicKey);
+    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
     console.dir(encrypted.data);
     console.log(`Decrypting result message "${message}"...`);
-    const decrypted = CryptoService.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
+    const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
     console.dir(decrypted);
     console.log(`Hashing message "${message}"...`);
-    const digest = CryptoService.hash(message);
+    const digest = DashmachineCrypto.hash(message);
     console.dir(digest.data);
     console.log(`Verifying hash...`);
-    const verifies = CryptoService.verify(message, digest.data);
+    const verifies = DashmachineCrypto.verify(message, digest.data);
     console.dir(verifies.success)
 
 

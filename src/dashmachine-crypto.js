@@ -5,10 +5,11 @@ const crypto = require('crypto');
 
 
 /**
- * CryptoService performs ECIES encryption & decryption and Double SHA256 Hashing. Note the class contains only static methods so you do not have to call the contructor, i.e. use CryptoService.encrypt, not new CryptoService() 
- * @class CryptoService
+ * DashmachineCrypto performs ECIES encryption & decryption and Double SHA256 Hashing. Note the class contains only static methods so you do not have to call the contructor, i.e. use DashmachineCrypto.encrypt, not new DashmachineCrypto() 
+ * @class DashmachineCrypto
  * @hideconstructor
  * @example
+ * <!-- Usage in HTML file -->
  * <script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
   <script>
     const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
@@ -17,21 +18,37 @@ const crypto = require('crypto');
     const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
     const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
     console.log(`Encrypting message "${message}"...`);
-    const encrypted = CryptoService.encrypt(vendorPrivateKey, message, userPubicKey);
+    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
     console.dir(encrypted.data);
     console.log(`Decrypting result message "${message}"...`);
-    const decrypted = CryptoService.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
+    const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
     console.dir(decrypted);
     console.log(`Hashing message "${message}"...`);
-    const digest = CryptoService.hash(message);
+    const digest = DashmachineCrypto.hash(message);
     console.dir(digest.data);
     console.log(`Verifying hash...`);
-    const verifies = CryptoService.verify(message, digest.data);
+    const verifies = DashmachineCrypto.verify(message, digest.data);
     console.dir(verifies.success)
   </script>
+ * @example
+    //use in nodejs
+    const DashmachineCrypto = require("dashmachine-crypto")
+
+    const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
+    const message = 'hello';
+    const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
+    const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
+    const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
+    console.log(`Encrypting message "${message}"...`);
+    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
+    console.dir(encrypted.data);
+    console.log(`Decrypting result message "${message}"...`);
+    const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
+    console.dir(decrypted);
+    console.log('decrypted', decrypted.data);
  * 
  */
-module.exports = class CryptoService {
+module.exports = class DashmachineCrypto {
 
     /**
      * 
@@ -99,7 +116,7 @@ module.exports = class CryptoService {
             const decrypted = recipient.decrypt(Buffer.from(JSON.parse(Buffer.from(encryptedMessage, 'hex').toString()).data));
             //console.log(`decrypted: ${decrypted}`);
 
-            return { success: true, data: decrypted };
+            return { success: true, data: Buffer.from(decrypted).toString() };
 
         } catch (e) {
             //console.log(`decrypt error: ${e}`)

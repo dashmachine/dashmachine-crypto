@@ -1,13 +1,13 @@
 {
   "name": "dashmachine-crypto",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "encryption utility library for message sending on Dash Platform",
-  "main": "src/crypto.service.js",
+  "main": "src/dashmachine-crypto.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --progress --colors",
     "start": "webpack-dev-server --progress --colors",
-    "docs:readme": "documentation readme src/crypto.service.js --section=Documentation"
+    "docs:readme": "documentation readme src/dashmachine-crypto.js --section=Documentation"
   },
   "repository": {
     "type": "git",

@@ -23,7 +23,8 @@
     console.log(`Verifying hash...`);
     const verifies = DashmachineCrypto.verify(message, digest.data);
     console.dir(verifies.success)
-
+    const entropy = DashmachineCrypto.generateEntropy();
+    console.log(`entropy: ${entropy}`);
 
   </script>
 </head>

@@ -29,6 +29,8 @@ const crypto = require('crypto');
     console.log(`Verifying hash...`);
     const verifies = DashmachineCrypto.verify(message, digest.data);
     console.dir(verifies.success)
+    const entropy = DashmachineCrypto.generateEntropy();
+    console.log(`entropy: ${entropy}`);
   </script>
  * @example
     //use in nodejs
@@ -46,6 +48,8 @@ const crypto = require('crypto');
     const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
     console.dir(decrypted);
     console.log('decrypted', decrypted.data);
+    const entropy = DashmachineCrypto.generateEntropy();
+    console.log(`entropy: ${entropy}`);
  * 
  */
 module.exports = class DashmachineCrypto {
@@ -175,5 +179,21 @@ module.exports = class DashmachineCrypto {
             //console.log(`hash error: ${e}`)
             return { error: true, message: e };
         }
+    }
+
+    /**
+     * 
+     * @static generateEntropy generates random entropy (a dash address)
+     * 
+     * @returns {Object} Either {success: true, data: [generated entropy]} or {error: true, message: [error message]}
+     */
+    static generateEntropy() {
+        try {
+            return new Dashcore.PublicKey(new Dashcore.PrivateKey()).toAddress().toString();
+        } catch (e) {
+            //console.log(`generateEntropy error: ${e}`)
+            return { error: true, message: e };
+        }
+
     }
 }

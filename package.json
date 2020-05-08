@@ -1,6 +1,6 @@
 {
   "name": "dashmachine-crypto",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "encryption utility library for message sending on Dash Platform",
   "main": "src/dashmachine-crypto.js",
   "scripts": {

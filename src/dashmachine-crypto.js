@@ -80,7 +80,7 @@ module.exports = class DashmachineCrypto {
 
             const encrypted = sender.encrypt(message);
             //return Hex of the stringified JSON of the reult buffer
-            const encryptedToHex = Buffer.from(JSON.stringify(encrypted)).toString('hex');
+            const encryptedToHex = Buffer.from(JSON.stringify(encrypted)).toString('base64');
             //console.log(`encrypted: ${encryptedToHex}`);
 
             return { success: true, data: encryptedToHex };
@@ -117,7 +117,7 @@ module.exports = class DashmachineCrypto {
                 .privateKey(decryptingKey)
                 .publicKey(senderPublicKeyFromBuffer);
 
-            const decrypted = recipient.decrypt(Buffer.from(JSON.parse(Buffer.from(encryptedMessage, 'hex').toString()).data));
+            const decrypted = recipient.decrypt(Buffer.from(JSON.parse(Buffer.from(encryptedMessage, 'base64').toString()).data));
             //console.log(`decrypted: ${decrypted}`);
 
             return { success: true, data: Buffer.from(decrypted).toString() };
@@ -141,12 +141,12 @@ module.exports = class DashmachineCrypto {
             const hash1 = crypto
                 .createHash("sha256")
                 .update(message)
-                .digest("hex");
+                .digest("base64");
 
             const digest = crypto
                 .createHash("sha256")
                 .update(hash1)
-                .digest("hex");
+                .digest("base64");
 
             //console.log(`digest: ${digest}`);
 

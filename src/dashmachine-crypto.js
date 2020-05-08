@@ -140,7 +140,7 @@ module.exports = class DashmachineCrypto {
         try {
             const hash1 = crypto
                 .createHash("sha256")
-                .update("message")
+                .update(message)
                 .digest("hex");
 
             const digest = crypto

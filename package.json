@@ -1,6 +1,6 @@
 {
   "name": "dashmachine-crypto",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "encryption utility library for message sending on Dash Platform",
   "main": "src/dashmachine-crypto.js",
   "scripts": {
@@ -37,8 +37,6 @@
   },
   "dependencies": {
     "bitcore-ecies-dash": "^1.0.4",
-    "dash": "^3.0.1",
-    "dashcore-lib": "^8.2.3",
-    "debug": "^4.1.1"
+    "dashcore-lib": "^8.2.3"
   }
 }

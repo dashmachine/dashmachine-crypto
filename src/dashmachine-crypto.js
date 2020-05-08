@@ -14,11 +14,11 @@ const crypto = require('crypto');
   <script>
     const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
     const message = 'hello';
-    const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
+    const userPublicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
     const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
     const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
     console.log(`Encrypting message "${message}"...`);
-    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
+    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPublicKey);
     console.dir(encrypted.data);
     console.log(`Decrypting result message "${message}"...`);
     const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);
@@ -38,11 +38,11 @@ const crypto = require('crypto');
 
     const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
     const message = 'hello';
-    const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
+    const userPublicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
     const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
     const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
     console.log(`Encrypting message "${message}"...`);
-    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
+    const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPublicKey);
     console.dir(encrypted.data);
     console.log(`Decrypting result message "${message}"...`);
     const decrypted = DashmachineCrypto.decrypt(userPrivateKey, encrypted.data, vendorPublicKey);

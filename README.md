@@ -60,6 +60,7 @@ DashmachineCrypto performs ECIES encryption & decryption and Double SHA256 Hashi
 
 ```javascript
 <!-- Usage in HTML file -->
+<script src="https://unpkg.com/dash"></script>
 <script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
 <script>
 const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'

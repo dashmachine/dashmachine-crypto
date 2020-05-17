@@ -4,8 +4,12 @@
 <head>
   <meta charset="utf-8">
   <title>Dashmachine Crypto</title>
+  
+  <script src="https://unpkg.com/dash"></script>
   <script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
+
   <script>
+    
     const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
     const message = 'hello';
     const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
@@ -25,7 +29,32 @@
     console.dir(verifies.success)
     const entropy = DashmachineCrypto.generateEntropy();
     console.log(`entropy: ${entropy}`);
+    
+/*
+    const senderName = 'alice';
+    const senderMnemonic = 'uniform analyst paper father soldier toe lesson fetch exhaust jazz swim response';
+    const recipientName = 'bob';
+    const recipientMnemonic = 'liar fee island situate deal exotic flat direct save bag fiscal news';
+    const userMessage = `Hello ${recipientName}!`;
+    const dpnsContractId = '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW'
 
+    async function testUsernameEncryption() {
+      try {
+        console.log(`send message \"${userMessage}\" to user: ${recipientName}`)
+        const encrypted = await DashmachineCrypto.encryptForUsername(userMessage, senderName, recipientName, senderMnemonic, dpnsContractId);
+        console.log('encrypted:', encrypted.data);
+        const decrypted = await DashmachineCrypto.decryptForUsername(encrypted.data, recipientName, senderName, recipientMnemonic, dpnsContractId)
+        console.log('decrypted:', decrypted.data);
+      }
+      catch (e) {
+        console.log('error :', e);
+
+      }
+
+    }
+
+    (async () => { await testUsernameEncryption() })()
+*/  
   </script>
 </head>
 

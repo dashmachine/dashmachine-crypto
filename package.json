@@ -1,6 +1,6 @@
 {
   "name": "dashmachine-crypto",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "encryption utility library for message sending on Dash Platform",
   "main": "src/dashmachine-crypto.js",
   "scripts": {
@@ -26,17 +26,22 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.9.6",
     "babel-core": "^6.26.3",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.0.0-beta.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/runtime": "^7.9.6",
     "bitcore-ecies-dash": "^1.0.4",
+    "dash": "^3.0.2",
     "dashcore-lib": "^8.2.3"
   }
 }

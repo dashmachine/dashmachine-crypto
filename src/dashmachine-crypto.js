@@ -2,6 +2,9 @@
 const Dashcore = require('dashcore-lib');
 const ECIES = require('bitcore-ecies-dash');
 const crypto = require('crypto');
+const DashConnection = require('./dashConnection.service');
+const User = require('./user.model');
+const debug = require('debug')('server:debug');
 
 
 /**
@@ -10,6 +13,7 @@ const crypto = require('crypto');
  * @hideconstructor
  * @example
  * <!-- Usage in HTML file -->
+ * <script src="https://unpkg.com/dash"></script>
  * <script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
   <script>
     const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
@@ -31,9 +35,34 @@ const crypto = require('crypto');
     console.dir(verifies.success)
     const entropy = DashmachineCrypto.generateEntropy();
     console.log(`entropy: ${entropy}`);
+
+    const senderName = 'alice';
+    const senderMnemonic = 'uniform analyst paper father soldier toe lesson fetch exhaust jazz swim response';
+    const recipientName = 'bob';
+    const recipientMnemonic = 'liar fee island situate deal exotic flat direct save bag fiscal news';
+    const userMessage = `Hello ${recipientName}!`;
+    const dpnsContractId = '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW'
+
+    async function testUsernameEncryption() {
+      try {
+        console.log(`send message \"${userMessage}\" to user: ${recipientName}`)
+        const encrypted = await DashmachineCrypto.encryptForUsername(userMessage, senderName, recipientName, senderMnemonic, dpnsContractId);
+        console.log('encrypted:', encrypted.data);
+        const decrypted = await DashmachineCrypto.decryptForUsername(encrypted.data, recipientName, senderName, recipientMnemonic, dpnsContractId)
+        console.log('decrypted:', decrypted.data);
+      }
+      catch (e) {
+        console.log('error :', e);
+
+      }
+
+    }
+
+    (async () => { await testUsernameEncryption() })()
   </script>
  * @example
     //use in nodejs
+    const Dashc = require('dash');
     const DashmachineCrypto = require("dashmachine-crypto")
 
     const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
@@ -50,6 +79,30 @@ const crypto = require('crypto');
     console.log('decrypted', decrypted.data);
     const entropy = DashmachineCrypto.generateEntropy();
     console.log(`entropy: ${entropy}`);
+
+    const senderName = 'alice';
+    const senderMnemonic = 'uniform analyst paper father soldier toe lesson fetch exhaust jazz swim response';
+    const recipientName = 'bob';
+    const recipientMnemonic = 'liar fee island situate deal exotic flat direct save bag fiscal news';
+    const userMessage = `Hello ${recipientName}!`;
+    const dpnsContractId = '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW'
+
+    async function testUsernameEncryption() {
+      try {
+        console.log(`send message \"${userMessage}\" to user: ${recipientName}`)
+        const encrypted = await DashmachineCrypto.encryptForUsername(userMessage, senderName, recipientName, senderMnemonic, dpnsContractId);
+        console.log('encrypted:', encrypted.data);
+        const decrypted = await DashmachineCrypto.decryptForUsername(encrypted.data, recipientName, senderName, recipientMnemonic, dpnsContractId)
+        console.log('decrypted:', decrypted.data);
+      }
+      catch (e) {
+        console.log('error :', e);
+
+      }
+
+    }
+
+    (async () => { await testUsernameEncryption() })()
  * 
  */
 module.exports = class DashmachineCrypto {
@@ -66,6 +119,7 @@ module.exports = class DashmachineCrypto {
     static encrypt(senderPrivateKey, message, recipientPublicKey) {
         //console.log(`encrypting following message:\n${message}`);
         try {
+
             //Convert Keys to DER format using Dashcore Library
             const recipientPublicKeyBuffer = Buffer.from(recipientPublicKey, 'base64')
             //console.log(`recipientPublicKeyBuffer: ${recipientPublicKeyBuffer}`)
@@ -87,7 +141,8 @@ module.exports = class DashmachineCrypto {
             //return { success: true, data: encrypted};
         } catch (e) {
             //console.log(`encrypt error: ${e}`)
-            return { error: true, message: e };
+            //return { error: true, message: e };
+            throw e;
         }
 
     }
@@ -105,6 +160,7 @@ module.exports = class DashmachineCrypto {
     static decrypt(recipientPrivateKey, encryptedMessage, senderPublicKey) {
         try {
 
+        
 
             const senderPublicKeyBuffer = Buffer.from(senderPublicKey, 'base64')
             //console.log(`senderPublicKeyBuffer: ${senderPublicKeyBuffer}`)
@@ -124,7 +180,8 @@ module.exports = class DashmachineCrypto {
 
         } catch (e) {
             //console.log(`decrypt error: ${e}`)
-            return { error: true, message: e };
+            //return { error: true, message: e };
+            throw e;
         }
 
     }
@@ -153,7 +210,8 @@ module.exports = class DashmachineCrypto {
             return { success: true, data: digest };
         } catch (e) {
             //console.log(`hash error: ${e}`)
-            return { error: true, message: e };
+            //return { error: true, message: e };
+            throw e;
         }
     }
 
@@ -177,7 +235,8 @@ module.exports = class DashmachineCrypto {
             }
         } catch (e) {
             //console.log(`hash error: ${e}`)
-            return { error: true, message: e };
+            //return { error: true, message: e };
+            throw e;
         }
     }
 
@@ -192,8 +251,91 @@ module.exports = class DashmachineCrypto {
             return new Dashcore.PublicKey(new Dashcore.PrivateKey()).toAddress().toString();
         } catch (e) {
             //console.log(`generateEntropy error: ${e}`)
-            return { error: true, message: e };
+            //return { error: true, message: e };
+            throw e;
         }
 
     }
+
+    /**
+     * 
+     * @static encryptForUsername return a message ECIES encrypted for the recipient's public key by the senders private key
+     * @param {string} message The message to encrypt
+     * @param {string} senderName DPNS username of sender
+     * @param {string} recipientName DPNS username of recipient 
+     * @param {string} senderMnemonic Account mnemonic of sender
+     * @param {string} dpnsContractId contractId for DPNS contract
+     * @returns {Object} {success: true, data: encryptedMessage} | {Error}
+     */
+    static async encryptForUsername(message, senderName, recipientName, senderMnemonic, dpnsContractId) {
+        try {
+
+            const users = await getUserKeys(senderName, senderMnemonic, recipientName, dpnsContractId);
+            //console.dir(users);
+            return {success: true, data: this.encrypt(users.privateKey, message, users.publicKey).data};
+
+        } catch (e) {
+            //console.log(`encryptForUsername error: ${e}`)
+            throw e;
+            //return { error: true, message: e };
+        }
+
+    }
+
+    /**
+     * 
+     * @static decryptForUsername return a message ECIES encrypted for the recipient's public key by the senders private key
+     * @param {string} message The message to decrypt
+     * @param {string} recipientName DPNS username of recipient
+     * @param {string} senderName DPNS username of sender
+     * @param {string} recipientMnemonic Account mnemonic of recipient
+     * @param {string} dpnsContractId contractId for DPNS contract
+     * @returns {Object} {success: true, data: encryptedMessage} or {Error}
+     */
+    static async decryptForUsername(message, recipientName, senderName, recipientMnemonic, dpnsContractId) {
+        try {
+
+            const users = await getUserKeys(recipientName, recipientMnemonic, senderName, dpnsContractId);
+            //console.dir(users);
+            return {success: true, data: this.decrypt(users.privateKey, message, users.publicKey).data};
+
+        } catch (e) {
+            //console.log(`decryptForUsername error: ${e}`)
+            throw e;
+            //return { error: true, message: e };
+        }
+
+    }
+}
+
+async function getUserKeys(privateUserName, privateUserMnemonic, publicUserName, dpnsContractId) {
+    try {
+        const dashConnection = new DashConnection('testnet', privateUserMnemonic, { dpnsContract: { contractId: dpnsContractId } }, { service: '34.215.175.142:3000' });
+        await dashConnection.connect();
+        //get private Key
+        const privateUser =  await User.find(privateUserName, dashConnection);
+        //console.dir(privateUser);
+        const privateKey = await dashConnection.account.getIdentityHDKey(0, 'user').privateKey;
+        //console.log('privateKey:', privateKey.toString());
+
+        //get the recipient
+        const publicUser = await User.find(publicUserName, dashConnection);
+        //console.dir(publicUser);
+        //get public Key
+        const publicKey = publicUser.data._publicKey;
+        //console.log('publicKey', publicKey);
+        dashConnection.disconnect();
+        return {
+            privateKey: privateKey,
+            publicKey: publicKey
+        }
+
+    } catch (e) {
+        //console.log(`getUsers error: ${e}`)
+        throw e;
+
+    }
+    
+
+
 }

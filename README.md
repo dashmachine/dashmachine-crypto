@@ -4,6 +4,24 @@ Cryptographic helper functions for use in Dash Platform Web Dapp Sample Messagin
 
 > Note: this is an experimental library to support the web dapp sample investigation of Dash Platform usage - not for production use.
 
+> **Breaking Changes** From v1.0.0 DashJS is required as an external dependency in both browser and node.js versions
+
+## Prerequisites
+
+To utilise the encryption & decryption by username The library requires DashJS as an external dependency, so this must be referenced BEFORE the Dashmachine Crypto library.
+In Node.js:
+```
+const Dash = require('dash');
+const DashmachineCrypto = require('dashmachine-crypto');
+```
+In the browser:
+```
+<script src="https://unpkg.com/dash"></script>
+<script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
+```
+
+**Please see the examples below for sample usage**
+
 ## Browser usage
 
 Include the `dashmachine-crypto-lib.js` script file available from the [releases page](https://github.com/dashmachine/dashmachine-crypto/releases).
@@ -29,6 +47,10 @@ Include the `dashmachine-crypto-lib.js` script file available from the [releases
 -   [verify](#verify)
     -   [Parameters](#parameters-3)
 -   [generateEntropy](#generateentropy)
+-   [encryptForUsername](#encryptforusername)
+    -   [Parameters](#parameters-4)
+-   [decryptForUsername](#decryptforusername)
+    -   [Parameters](#parameters-5)
 
 #### DashmachineCrypto
 
@@ -38,6 +60,7 @@ DashmachineCrypto performs ECIES encryption & decryption and Double SHA256 Hashi
 
 ```javascript
 <!-- Usage in HTML file -->
+<script src="https://unpkg.com/dash"></script>
 <script src="dashmachine-crypto-lib.js" type="text/javascript"></script>
 <script>
 const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
@@ -59,11 +82,36 @@ const verifies = DashmachineCrypto.verify(message, digest.data);
 console.dir(verifies.success)
 const entropy = DashmachineCrypto.generateEntropy();
 console.log(`entropy: ${entropy}`);
+
+const senderName = 'alice';
+const senderMnemonic = 'uniform analyst paper father soldier toe lesson fetch exhaust jazz swim response';
+const recipientName = 'bob';
+const recipientMnemonic = 'liar fee island situate deal exotic flat direct save bag fiscal news';
+const userMessage = `Hello ${recipientName}!`;
+const dpnsContractId = '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW'
+
+async function testUsernameEncryption() {
+try {
+console.log(`send message \"${userMessage}\" to user: ${recipientName}`)
+const encrypted = await DashmachineCrypto.encryptForUsername(userMessage, senderName, recipientName, senderMnemonic, dpnsContractId);
+console.log('encrypted:', encrypted.data);
+const decrypted = await DashmachineCrypto.decryptForUsername(encrypted.data, recipientName, senderName, recipientMnemonic, dpnsContractId)
+console.log('decrypted:', decrypted.data);
+}
+catch (e) {
+console.log('error :', e);
+
+}
+
+}
+
+(async () => { await testUsernameEncryption() })()
 </script>
 ```
 
 ```javascript
 //use in nodejs
+const Dash = require('dash');
 const DashmachineCrypto = require("dashmachine-crypto")
 
 const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
@@ -80,6 +128,30 @@ console.dir(decrypted);
 console.log('decrypted', decrypted.data);
 const entropy = DashmachineCrypto.generateEntropy();
 console.log(`entropy: ${entropy}`);
+
+const senderName = 'alice';
+const senderMnemonic = 'uniform analyst paper father soldier toe lesson fetch exhaust jazz swim response';
+const recipientName = 'bob';
+const recipientMnemonic = 'liar fee island situate deal exotic flat direct save bag fiscal news';
+const userMessage = `Hello ${recipientName}!`;
+const dpnsContractId = '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW'
+
+async function testUsernameEncryption() {
+try {
+console.log(`send message \"${userMessage}\" to user: ${recipientName}`)
+const encrypted = await DashmachineCrypto.encryptForUsername(userMessage, senderName, recipientName, senderMnemonic, dpnsContractId);
+console.log('encrypted:', encrypted.data);
+const decrypted = await DashmachineCrypto.decryptForUsername(encrypted.data, recipientName, senderName, recipientMnemonic, dpnsContractId)
+console.log('decrypted:', decrypted.data);
+}
+catch (e) {
+console.log('error :', e);
+
+}
+
+}
+
+(async () => { await testUsernameEncryption() })()
 ```
 
 #### encrypt
@@ -120,6 +192,31 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 #### generateEntropy
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Either {success: true, data: [generated entropy]} or {error: true, message: [error message]}
+
+#### encryptForUsername
+
+##### Parameters
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The message to encrypt
+-   `senderName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** DPNS username of sender
+-   `recipientName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** DPNS username of recipient
+-   `senderMnemonic` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account mnemonic of sender
+-   `dpnsContractId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** contractId for DPNS contract
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** {success: true, data: encryptedMessage} | {Error}
+
+#### decryptForUsername
+
+##### Parameters
+
+-   `message` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The message to decrypt
+-   `recipientName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** DPNS username of recipient
+-   `senderName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** DPNS username of sender
+-   `recipientMnemonic` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account mnemonic of recipient
+-   `dpnsContractId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** contractId for DPNS contract
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** {success: true, data: encryptedMessage} or {Error}
+
 
 ### License
 

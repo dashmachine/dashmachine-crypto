@@ -10,11 +10,12 @@
 
   <script>
     
-    const vendorPrivateKey = '40148175614f062fb0b4e5c519be7b6f57b872ebb55ea719376322fd12547bff'
+    const vendorPrivateKey = '98cf6a9908bbc383e1a5564629d51eb8ae287fac0e9f01ab4390342ace306318'
     const message = 'hello';
-    const userPubicKey = 'A7GGInyvn7ExXkSVg+OFhbhVjEMhIFv0oyeJl03gFDRo'
+    const userPubicKey = 'ApcIR8ojHDOfCH6DBDBUGIgDI3wiG9GmBwUibtm32xCe'
     const userPrivateKey = '219c8a8f9376750cee9f06e0409718f2a1b88df4acc61bf9ed9cf252c8602768'
-    const vendorPublicKey = 'A0/qSE6tis4l6BtQlTXB2PHW+WV+Iy0rpF5hAvX8hDRz'
+    const vendorPublicKey = 'Ag/YNnbAfG0IpNeH4pfMzgqIsgooR36s5MzzYJV76TpO'
+    /*
     console.log(`Encrypting message "${message}"...`);
     const encrypted = DashmachineCrypto.encrypt(vendorPrivateKey, message, userPubicKey);
     console.dir(encrypted.data);
@@ -29,6 +30,8 @@
     console.dir(verifies.success)
     const entropy = DashmachineCrypto.generateEntropy();
     console.log(`entropy: ${entropy}`);
+    */
+   const decrypted = DashmachineCrypto.decrypt('98cf6a9908bbc383e1a5564629d51eb8ae287fac0e9f01ab4390342ace306318', 'eyJ0eXBlIjoiQnVmZmVyIiwiZGF0YSI6WzIsMTUxLDgsNzEsMjAyLDM1LDI4LDUxLDE1OSw4LDEyNiwxMzEsNCw0OCw4NCwyNCwxMzYsMywzNSwxMjQsMzQsMjcsMjA5LDE2Niw3LDUsMzQsMTEwLDIxNywxODMsMjE5LDE2LDE1OCwxMzMsOTEsMjQwLDEwOCw5OSwxMjUsNywyMjgsNDgsMTUzLDEwNywyOSwxOSwxMDcsNzksMzcsMTIwLDYzLDU4LDE3Nyw5NywxMTQsNTIsMTM2LDQxLDc0LDc5LDgyLDkyLDE3MSw5MSw3MSwxNTIsMTYyLDI0NCwxMzIsMTAxLDUyLDI0NSwxODAsMjAsMTMxLDU1LDEzNiw3OCw5OSwyMzUsMTksOTAsMTk0LDIwNywyMDksOTYsMTc5LDExMCwxNDEsMjQwLDEzMywyMzIsMjMzLDI0MCwxNjUsMTY3LDEwOSw0LDIzMiwxMDIsNjEsMjAwLDE2NCw4MiwyMjYsMTgwLDIxNywyMTUsOTYsMjE1LDUxLDgzLDE0NywxMTYsMTY4LDIyMCw3NywxNDIsMTE0LDI0MCwxNjQsNTcsMjI5LDEwOSw5MiwyMzAsODQsNTcsNjldfQ==', 'ApcIR8ojHDOfCH6DBDBUGIgDI3wiG9GmBwUibtm32xCe');
     
 /*
     const senderName = 'alice';
